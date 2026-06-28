@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+
+# Generated artifacts kept out of the repo (robot_run.gif / value_iteration.gif /
+# vi_vs_pi.png ARE tracked, for the README).
+value_iteration_policy.png
+
+# Local-only: marketing drafts, design/plan docs, and side experiments
+docs/post/
+docs/superpowers/
+random_walk.py
+
+# Subagent-driven-development session scratch (ledger, briefs, reports, diffs)
+.superpowers/

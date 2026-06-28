@@ -1,0 +1,20 @@
+# Row 0 is the top row. '.' free, '#' wall, 'G' goal (+1 terminal).
+# 6 rows x 7 cols, 2 m cells. Start bottom-left, goal top-right.
+# 2 m cells give the small TurtleBot3 generous clearance through the 1-cell-wide
+# corridors, so the simple cell-follower never clips a wall mid-turn.
+grid:
+  - ".....#G"
+  - ".###.#."
+  - ".#...#."
+  - ".#.##.."
+  - ".#....#"
+  - "......#"
+cell_size: 2.0
+origin_x: 0.0
+origin_y: 0.0
+step_reward: -1.0
+terminal_rewards:
+  G: 20.0
+slip_prob: 0.1
+gamma: 0.95
+start: [5, 0]
