@@ -16,3 +16,8 @@ random_walk.py
 
 # Subagent-driven-development session scratch (ledger, briefs, reports, diffs)
 .superpowers/
+
+# Temporary / OS / Editor files
+~$*
+.DS_Store
+Thumbs.db

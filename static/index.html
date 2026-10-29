@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intelligent Warehouse Robot Navigation Using Asynchronous Dynamic Programming</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div><p class="kicker">MDP LAB / 01</p><h1>Intelligent Warehouse<br><em>Robot Navigation</em></h1><p class="project-title">Using Asynchronous Dynamic Programming</p></div>
+      <p class="intro">The route is hidden. Read the warehouse, steer the robot, and earn the shortest delivery before consulting dynamic programming.</p>
+    </header>
+    <section class="workspace">
+      <div class="map-panel"><div class="panel-heading"><span>Warehouse puzzle</span><span id="mode-label">PLAYER MODE</span></div><div id="grid" class="grid" aria-label="Warehouse grid"></div><div class="legend"><span><b class="dot start"></b>Robot</span><span><b class="dot goal"></b>Goal</span><span><b class="dot wall"></b>Obstacle</span><span><b class="dot path"></b>Solution</span></div><div class="puzzle-hud"><strong id="moves">0</strong><span>moves</span><span class="hud-divider">/</span><strong id="best">?</strong><span>best</span><span class="hud-divider">/</span><span id="hint">Use the arrow keys to find the shortest route.</span></div></div>
+      <aside class="controls"><div class="control-block"><p class="label">Puzzle controls</p><button id="generate">New Warehouse</button><p class="key-hint">Arrow keys: move the robot<br>Reach G without crossing #.</p><button id="async">Run Async DP</button><button id="sync">Run Synchronous VI</button><button id="path">Show Solution</button><button id="animate" class="accent">Animate Solution</button><div class="button-row"><button id="values">Values</button><button id="policy">Policy</button><button id="reset">Reset</button></div></div><div class="control-block"><p class="label">Mission telemetry</p><div id="status" class="status">Use arrow keys to deliver the robot.</div><div class="metrics" id="metrics"></div></div></aside>
+    </section>
+    <section class="comparison"><div class="panel-heading"><span>Same warehouse / measured comparison</span><button id="compare">Compare both</button></div><p class="comparison-note">Both methods should find the same optimal policy in this deterministic MDP. The academic difference is <strong>how values are updated</strong>; runtime and convergence are measured, never assumed.</p><div class="table-wrap"><table><thead><tr><th>Metric</th><th>Sync VI</th><th>Async VI</th></tr></thead><tbody id="comparison-body"><tr><td colspan="3">Run both algorithms to populate the experiment.</td></tr></tbody></table></div></section>
+    <footer><span>GAMMA 0.9</span><span>THETA 0.001</span><span>DETERMINISTIC GRIDWORLD</span><span>SIMULATION ONLY</span></footer>
+  </main>
+  <script src="/static/script.js"></script>
+</body>
+</html>

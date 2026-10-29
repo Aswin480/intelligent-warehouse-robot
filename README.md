@@ -1,43 +1,79 @@
-# rl-explorations
+# Intelligent Warehouse Robot Navigation Using Asynchronous Dynamic Programming
 
-Applying reinforcement-learning fundamentals (Markov Decision Processes and Dynamic Programming) to robot navigation. A TurtleBot3 in Gazebo drives a path computed entirely by value iteration, over ROS 2.
+## Project Overview
 
-![TurtleBot3 following the value-iteration policy through a maze](robot_run.gif)
+This browser-based simulation models a robot navigating a finite warehouse grid. It demonstrates how a warehouse MDP becomes a value function, a greedy policy, and an executable route using **in-place asynchronous value iteration**.
 
-The heatmap is the value function (brighter means closer to the goal), the white arrows are the optimal policy, and the red dot is the robot driving the path it computed.
+This is a local simulation, not a physical warehouse robot. It does not require ROS 2, Gazebo, hardware, Docker, a database, or cloud services.
 
-## The idea
+## Problem and MDP
 
-Value iteration, the core algorithm of Dynamic Programming, is essentially a classic robot path planner. This repo makes that literal: model a maze as a Markov Decision Process, solve it with Dynamic Programming, and hand the resulting policy to a robot.
+The robot travels from `S` to `G` while avoiding `#` obstacles. The simulator generates warehouses, runs asynchronous and synchronous dynamic programming on the same map, shows values and policy arrows, and animates the selected route.
 
-## How it works
+- **State:** `s = (row, column)` for every non-obstacle cell.
+- **Actions:** `UP`, `DOWN`, `LEFT`, `RIGHT`.
+- **Transition:** valid moves enter a neighboring free cell. Boundary and obstacle moves stay in place. The goal is terminal and absorbing.
+- **Rewards:** goal `+100`, movement `-1`, obstacle collision `-10`, boundary collision `-5`.
+- **Discount:** `gamma = 0.9`, configured in `mdp.py`.
 
-**1. Model the maze as an MDP and solve it with value iteration.** The value "floods" outward from the goal, sweep by sweep, until every cell knows how good it is:
+For a deterministic transition, the Bellman update is:
 
-![Value iteration converging](value_iteration.gif)
+`V(s) = max_a [ R(s,a) + gamma * V(next_state(s,a)) ]`
 
-**2. Cross-check with policy iteration.** Both Dynamic Programming algorithms reach the same optimal value function, by different routes:
+### Asynchronous Dynamic Programming
 
-![Value iteration vs policy iteration](vi_vs_pi.png)
+`async_dp.py` updates states in row-major order and immediately writes each result into the live value map. Later states in the same sweep can use freshly updated values. Here, “asynchronous” means in-place dynamic programming; it does **not** mean Python `async`/`await`, `asyncio`, threads, or concurrent execution.
 
-**3. Drive the robot.** A ROS 2 node reads the robot's odometry, maps its pose to a grid cell, looks up the optimal action for that cell, and publishes a velocity command. Because it executes a *policy* (the best action from every cell, not a fixed route), the robot recovers naturally when it drifts off course.
+The synchronous baseline copies the value map for each sweep. Both use `theta = 0.001` and at most `1000` iterations. The UI reports actual iterations, state updates, runtime, convergence, path length, and total reward; it does not assume one algorithm is always faster.
 
-## What's inside
+## Architecture
 
-- `gridworld/` — a pure-Python (numpy only) MDP and the DP solvers: iterative policy evaluation, value iteration, and policy iteration. Checked against the canonical Sutton & Barto Figure 4.1 grid and the Russell & Norvig 4x3 world.
-- `viz/` — the matplotlib visualizations shown above.
-- `ros2_ws/src/dp_nav/` — the ROS 2 / Gazebo demo. See its [README](ros2_ws/src/dp_nav/README.md) for the verified setup and run steps.
-- `scenarios/` — the maze definition (grid layout, rewards, transition noise).
-
-## Quick start
-
-```bash
-uv sync
-uv run pytest        # the DP core, checked against the textbook answers
+```text
+main.py                    FastAPI routes and solvable random grids
+mdp.py                     Warehouse MDP, rewards, transitions, terminal state
+async_dp.py                Async VI, synchronous VI, policies, paths
+static/index.html          Browser dashboard
+static/style.css           Dashboard styling
+static/script.js           API calls, grid rendering, animation
+tests/test_mdp.py          Original Gridworld regression tests
+tests/test_async_dp.py     Warehouse solver and path tests
+tests/test_warehouse_mdp.py Warehouse MDP tests
+gridworld/                 Original pure-Python MDP foundation retained
 ```
 
-The robot demo (ROS 2 + Gazebo) is documented in [ros2_ws/src/dp_nav/README.md](ros2_ws/src/dp_nav/README.md).
+The original `gridworld/` package and tests remain intact. Its general NumPy tensor and stochastic slip model are useful foundations, while the final simulator uses the smaller deterministic `WarehouseMDP` so the academic demonstration is easy to explain.
 
-## Scope
+## Installation and Running
 
-This uses the material from the first four chapters of Sutton & Barto: bandits, MDPs, and Dynamic Programming. Dynamic Programming plans with a known model; it does not learn from experience.
+From Windows PowerShell in this folder:
+
+```powershell
+py -m venv .venv
+.venv\Scripts\Activate.ps1
+py -m pip install -r requirements.txt
+py -m uvicorn main:app --reload
+```
+
+Open `http://127.0.0.1:8000`, and run tests with `pytest -q`.
+
+## API
+
+- `GET /` serves the dashboard.
+- `POST /api/generate` accepts optional `rows`, `cols`, `density`, and `seed`.
+- `POST /api/run/async-dp` runs in-place asynchronous value iteration.
+- `POST /api/run/value-iteration` runs the synchronous baseline.
+- `POST /api/path` accepts `{"algorithm":"async"}` or `{"algorithm":"sync"}`.
+- `GET /api/compare` runs both algorithms on the current warehouse.
+- `POST /api/reset` restores the default 10 x 10 warehouse.
+
+## Experiment, Limitations, and Future Work
+
+The comparison table measures both algorithms on the same generated warehouse. Results depend on map layout, state order, and machine timing. The current environment is deterministic, single-robot, and static; it does not model inventory, moving workers, multiple robots, uncertainty, or physical motion.
+
+Possible extensions include stochastic transitions, selectable state orders, warehouse tasks and shelves, value-propagation playback, multiple robots, and a physical-robot adapter.
+
+## Screenshots
+
+Add screenshots here after running the local dashboard.
+
+For the viva explanation and metric definitions, see [PROJECT_REPORT.md](PROJECT_REPORT.md).

@@ -1,0 +1,33 @@
+{
+  "experimental_settings": {
+    "episodes": 250,
+    "evaluation_episodes": 100,
+    "seed": 42,
+    "discount_gamma": 0.95,
+    "max_steps": 50
+  },
+  "faulty_baseline": {
+    "success_rate": 0.0,
+    "mean_return": -70.0,
+    "std_return": 0.0,
+    "mean_steps": 50.0,
+    "std_steps": 0.0,
+    "mean_collisions": 0.0,
+    "training_time_seconds": 84.72819542884827
+  },
+  "corrected_ddqn": {
+    "success_rate": 100.0,
+    "mean_return": 115.0,
+    "std_return": 0.0,
+    "mean_steps": 10.0,
+    "std_steps": 0.0,
+    "mean_collisions": 0.0,
+    "training_time_seconds": 14.424638509750366
+  },
+  "performance_gain": {
+    "success_rate_gain_pct": 100.0,
+    "return_gain": 185.0,
+    "collision_reduction": 0.0,
+    "speedup_factor": 5.873852254361595
+  }
+}

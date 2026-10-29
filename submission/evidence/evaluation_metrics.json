@@ -1,0 +1,19 @@
+{
+  "evaluation_episodes": 100,
+  "untrained_baseline": {
+    "success_rate": 8.0,
+    "mean_return": -243.46,
+    "std_return": 62.05568789401984,
+    "mean_steps": 58.93,
+    "std_steps": 5.490455354522063,
+    "mean_collisions": 28.17
+  },
+  "trained_dqn": {
+    "success_rate": 100.0,
+    "mean_return": 115.0,
+    "std_return": 0.0,
+    "mean_steps": 10.0,
+    "std_steps": 0.0,
+    "mean_collisions": 0.0
+  }
+}
