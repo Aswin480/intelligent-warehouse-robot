@@ -21,3 +21,16 @@ random_walk.py
 ~$*
 .DS_Store
 Thumbs.db
+
+# Presentations, Reports, and Submissions
+*.pptx
+*.docx
+*.pdf
+*.zip
+presentation.html
+PROJECT_REPORT.md
+submission/
+submission_debugging/
+create_*_zip.py
+generate_*_pdf.py
+generate_*report*.py

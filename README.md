@@ -72,8 +72,9 @@ The comparison table measures both algorithms on the same generated warehouse. R
 
 Possible extensions include stochastic transitions, selectable state orders, warehouse tasks and shelves, value-propagation playback, multiple robots, and a physical-robot adapter.
 
-## Screenshots
+## Features
 
-Add screenshots here after running the local dashboard.
-
-For the viva explanation and metric definitions, see [PROJECT_REPORT.md](PROJECT_REPORT.md).
+- **Asynchronous Value Iteration**: Real-time in-place Bellman updates.
+- **Deep Q-Learning (DQN)**: Offline and online training for dynamic warehouse navigation.
+- **Interactive Streamlit App**: Visualizes Bellman value propagation, policy vectors, and trajectory metrics.
+- **FastAPI Backend**: REST endpoints for simulation runs and algorithm benchmarking.
